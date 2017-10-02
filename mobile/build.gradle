@@ -29,6 +29,29 @@ android {
     }
 }
 
+clean.doLast() {
+    task myclean(type: Exec) {
+        workingDir 'src/main/pjproject'
+        if (file("$workingDir/build.mak").isFile()) {
+            println("\nDoing realclean in $workingDir\n")
+            executable 'sh'
+            commandLine('make', 'realclean')
+            execute()
+        }
+        file("$workingDir/build.mak").delete()
+        file("$workingDir/build/cc-auto.mak").delete()
+        file("$workingDir/build/os-auto.mak").delete()
+        file("$workingDir/config.log").delete()
+        file("$workingDir/config.status").delete()
+        file("$workingDir/pjlib-util/build/os-auto.mak").delete()
+        file("$workingDir/pjlib/build/os-auto.mak").delete()
+        file("$workingDir/pjmedia/build/os-auto.mak").delete()
+        file("$workingDir/pjsip/build/os-auto.mak").delete()
+        file("$workingDir/third_party/build/os-auto.mak").delete()
+        file("$workingDir/third_party/build/portaudio/os-auto.mak").delete()
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
