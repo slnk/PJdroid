@@ -1,6 +1,3 @@
-#include <jni.h>
-#include <string>
-
 #include "jni-include/common.h"
 
 #define THIS_FILE "APP"
