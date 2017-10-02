@@ -192,7 +192,7 @@ target_link_libraries( # Specifies the target library.
 # OpenSSL is another case.  ssl and crypto must appear before and after the
 # SECOND instance of pjLib.
 target_link_libraries(  pjapi pjSua pjSip pjSip-Ua pjSimple pjNath pjUtil pjMediaCodec pjMedia pjLib
-                        pjMediaAudioDev pjThirdResample pjWebRtc pjSpeex log android
+                        pjMediaAudioDev pjThirdResample pjWebRtc pjSpeex pjIlbc pjGsm pjThirdSrtp pjUtil log android
                 )
 
 add_custom_command (TARGET pjapi POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/build/intermediates/cmake/debug/obj/armeabi-v7a/libpjapi.so
