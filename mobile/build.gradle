@@ -15,13 +15,13 @@ android {
             abiFilters 'armeabi-v7a'
             moduleName "pjapi"
             ldLibs "log", "OpenSLES", "atomic"
-            stl = "gnustl_static"
         }
 
         externalNativeBuild {
             cmake {
                 cppFlags ""
                 arguments '-DANDROID_TOOLCHAIN=clang',
+                        '-DANDROID_STL=gnustl_static',
                         '-DANDROID_ARM_NEON=TRUE',
                         '-DANDROID_CPP_FEATURES=exceptions rtti'
             }
