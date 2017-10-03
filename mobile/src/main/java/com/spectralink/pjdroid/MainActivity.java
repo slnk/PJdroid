@@ -2,13 +2,24 @@ package com.spectralink.pjdroid;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     // Used to load the 'native-lib' library on application startup.
     static {
-        System.loadLibrary("native-lib");
+        System.loadLibrary("pjapi");
+    }
+
+    public void buttonOnClick(View v) {
+        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+        TextView tv = (TextView) findViewById(R.id.sample_text);
+        tv.setText(currentDateTimeString);
+        tv.setText("JNI: " + stringFromJNI());
     }
 
     @Override
@@ -18,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of a call to a native method
         TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+        tv.setText("Hello JNI");
     }
 
     /**

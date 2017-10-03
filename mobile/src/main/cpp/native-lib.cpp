@@ -2,9 +2,9 @@
 
 #define THIS_FILE "APP"
 
-#define SIP_DOMAIN "sip-10001.accounts.qos.vocal-dev.com"
-#define SIP_USER "VH3"
-#define SIP_PASSWD "Vocal123"
+//#define SIP_DOMAIN "sip-10001.accounts.qos.vocal-dev.com"
+//#define SIP_USER "VH3"
+//#define SIP_PASSWD "Vocal123"
 
 
 /* Callback called by the library upon receiving incoming call */
@@ -57,8 +57,9 @@ static void error_exit(const char *title, pj_status_t status) {
     exit(1);
 }
 
+extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_spectralink_slnksipservice_MainActivity_stringFromJNI(
+Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
     pjsua_acc_id acc_id;
@@ -70,7 +71,6 @@ Java_com_spectralink_slnksipservice_MainActivity_stringFromJNI(
     if (status != PJ_SUCCESS) error_exit("Error in pjsua_create()", status);
 
     /* If argument is specified, it's got to be a valid SIP URL */
-    // ==== Frank ========
     status = pjsua_verify_url("sip-10001.accounts.qos.vocal-dev.com");
 
     /* Init pjsua */
@@ -109,41 +109,42 @@ Java_com_spectralink_slnksipservice_MainActivity_stringFromJNI(
         pjsua_acc_config cfg;
 
         pjsua_acc_config_default(&cfg);
-        cfg.id = pj_str("sip:" SIP_USER "@" SIP_DOMAIN);
-        cfg.reg_uri = pj_str("sip:" SIP_DOMAIN);
+        cfg.id = pj_str("sip:VH3@sip-10001.accounts.qos.vocal-dev.com");
+        cfg.reg_uri = pj_str("sip:sip-10001.accounts.qos.vocal-dev.com");
         cfg.cred_count = 1;
-        cfg.cred_info[0].realm = pj_str(SIP_DOMAIN);
+        cfg.cred_info[0].realm = pj_str("sip-10001.accounts.qos.vocal-dev.com");
         cfg.cred_info[0].scheme = pj_str("digest");
-        cfg.cred_info[0].username = pj_str(SIP_USER);
+        cfg.cred_info[0].username = pj_str("VH3");
         cfg.cred_info[0].data_type = PJSIP_CRED_DATA_PLAIN_PASSWD;
-        cfg.cred_info[0].data = pj_str(SIP_PASSWD);
+        cfg.cred_info[0].data = pj_str("Vocal123");
 
         status = pjsua_acc_add(&cfg, PJ_TRUE, &acc_id);
         if (status != PJ_SUCCESS) error_exit("Error adding account", status);
     }
 
-    /* If URL is specified, make call to the URL. */
-    //// === Frank ======
-    //pj_str_t uri = pj_str("VH3@sip-10001.accounts.qos.vocal-dev.com");
-    //status = pjsua_call_make_call(acc_id, &uri, 0, NULL, NULL, NULL);
-    //if (status != PJ_SUCCESS) error_exit("Error making call", status);
 
-    /* Wait until user press "q" to quit. */
-    for (;;) {
-        char option[10];
-
-        puts("Press 'h' to hangup all calls, 'q' to quit");
-        if (fgets(option, sizeof(option), stdin) == NULL) {
-            puts("EOF while reading stdin, will quit now..");
-            break;
-        }
-
-        if (option[0] == 'q')
-            break;
-
-        if (option[0] == 'h')
-            pjsua_call_hangup_all();
-    }
+//
+//    /* If URL is specified, make call to the URL. */
+//    //pj_str_t uri = pj_str("VH3@sip-10001.accounts.qos.vocal-dev.com");
+//    //status = pjsua_call_make_call(acc_id, &uri, 0, NULL, NULL, NULL);
+//    //if (status != PJ_SUCCESS) error_exit("Error making call", status);
+//
+//    /* Wait until user press "q" to quit. */
+//    for (;;) {
+//        char option[10];
+//
+//        puts("Press 'h' to hangup all calls, 'q' to quit");
+//        if (fgets(option, sizeof(option), stdin) == NULL) {
+//            puts("EOF while reading stdin, will quit now..");
+//            break;
+//        }
+//
+//        if (option[0] == 'q')
+//            break;
+//
+//        if (option[0] == 'h')
+//            pjsua_call_hangup_all();
+//    }
 
     /* Destroy pjsua */
     pjsua_destroy();
