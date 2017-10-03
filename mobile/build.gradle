@@ -15,6 +15,7 @@ android {
             abiFilters 'armeabi-v7a'
             moduleName "pjapi"
             ldLibs "log", "OpenSLES", "atomic"
+            stl = "gnustl_static"
         }
 
         externalNativeBuild {
