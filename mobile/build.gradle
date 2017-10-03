@@ -14,11 +14,15 @@ android {
         ndk {
             abiFilters 'armeabi-v7a'
             moduleName "pjapi"
+            ldLibs "log", "OpenSLES", "atomic"
         }
 
         externalNativeBuild {
             cmake {
                 cppFlags ""
+                arguments '-DANDROID_TOOLCHAIN=clang',
+                        '-DANDROID_ARM_NEON=TRUE',
+                        '-DANDROID_CPP_FEATURES=exceptions rtti'
             }
         }
     }
