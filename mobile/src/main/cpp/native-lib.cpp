@@ -2,11 +2,6 @@
 
 #define THIS_FILE "APP"
 
-//#define SIP_DOMAIN "sip-10001.accounts.qos.vocal-dev.com"
-//#define SIP_USER "VH3"
-//#define SIP_PASSWD "Vocal123"
-
-
 /* Callback called by the library upon receiving incoming call */
 static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id,
                              pjsip_rx_data *rdata) {
@@ -64,14 +59,23 @@ Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
         jobject /* this */) {
     pjsua_acc_id acc_id;
     pj_status_t status;
-
+    std::string my_status = "";
 
     /* Create pjsua first! */
     status = pjsua_create();
-    if (status != PJ_SUCCESS) error_exit("Error in pjsua_create()", status);
+    if (status != PJ_SUCCESS) {
+        pjsua_perror("native-lib.cpp", "Error in pjsua_create()", status);
+        my_status = "Error in pjsua_create()";
+        return env->NewStringUTF(my_status.c_str());
+    }
 
     /* If argument is specified, it's got to be a valid SIP URL */
-    status = pjsua_verify_url("sip-10001.accounts.qos.vocal-dev.com");
+    status = pjsua_verify_url("sip:VH3@sip-10001.accounts.qos.vocal-dev.com");
+    if (status != PJ_SUCCESS) {
+        pjsua_perror("native-lib.cpp", "Error in pjsua_verify_url()", status);
+        my_status = "Error in pjsua_verify_url()";
+        return env->NewStringUTF(my_status.c_str());
+    }
 
     /* Init pjsua */
     {
@@ -87,7 +91,11 @@ Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
         log_cfg.console_level = 4;
 
         status = pjsua_init(&cfg, &log_cfg, NULL);
-        if (status != PJ_SUCCESS) error_exit("Error in pjsua_init()", status);
+        if (status != PJ_SUCCESS) {
+            pjsua_perror("native-lib.cpp", "Error in pjsua_init()", status);
+            my_status = "Error in pjsua_init()";
+            return env->NewStringUTF(my_status.c_str());
+        }
     }
 
     /* Add UDP transport. */
@@ -95,14 +103,23 @@ Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
         pjsua_transport_config cfg;
 
         pjsua_transport_config_default(&cfg);
-        cfg.port = 5060;
+        cfg.port = 5080;
         status = pjsua_transport_create(PJSIP_TRANSPORT_UDP, &cfg, NULL);
-        if (status != PJ_SUCCESS) error_exit("Error creating transport", status);
+        if (status != PJ_SUCCESS) {
+            pjsua_perror("native-lib.cpp", "Error in pjsua_transport_create()", status);
+            pjsua_destroy();
+            my_status = "Error in pjsua_transport_create()";
+            return env->NewStringUTF(my_status.c_str());
+        }
     }
 
     /* Initialization is done, now start pjsua */
     status = pjsua_start();
-    if (status != PJ_SUCCESS) error_exit("Error starting pjsua", status);
+    if (status != PJ_SUCCESS) {
+        pjsua_destroy();
+        pjsua_perror("native-lib.cpp", "Error in pjsua_start()", status);
+        return env->NewStringUTF(my_status.c_str());
+    }
 
     /* Register to SIP server by creating SIP account. */
     {
@@ -116,12 +133,16 @@ Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
         cfg.cred_info[0].scheme = pj_str("digest");
         cfg.cred_info[0].username = pj_str("VH3");
         cfg.cred_info[0].data_type = PJSIP_CRED_DATA_PLAIN_PASSWD;
-        cfg.cred_info[0].data = pj_str("Vocal123");
+        cfg.cred_info[0].data = pj_str("123");
 
         status = pjsua_acc_add(&cfg, PJ_TRUE, &acc_id);
-        if (status != PJ_SUCCESS) error_exit("Error adding account", status);
+        if (status != PJ_SUCCESS) {
+            pjsua_perror("native-lib.cpp", "Error in adding account", status);
+            pjsua_destroy();
+            my_status = "Error in adding account";
+            return env->NewStringUTF(my_status.c_str());
+        }
     }
-
 
 //
 //    /* If URL is specified, make call to the URL. */
@@ -147,7 +168,12 @@ Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
 //    }
 
     /* Destroy pjsua */
-    pjsua_destroy();
+    status = pjsua_destroy();
+    if (status != PJ_SUCCESS) {
+        pjsua_perror("native-lib.cpp", "Error in pjsua_destroy()", status);
+        return env->NewStringUTF(my_status.c_str());
+    }
+    my_status = "pjsua_destroy() successfully";
 
-    return 0;
+    return env->NewStringUTF(my_status.c_str());
 }
