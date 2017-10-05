@@ -18,8 +18,7 @@ public class MainActivity extends AppCompatActivity {
     public void buttonOnClick(View v) {
         String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
         TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(currentDateTimeString);
-        tv.setText("JNI: " + stringFromJNI());
+        tv.setText("JNI "+currentDateTimeString+": " + stringFromJNI());
     }
 
     @Override

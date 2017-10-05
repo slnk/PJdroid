@@ -59,7 +59,7 @@ Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
         jobject /* this */) {
     pjsua_acc_id acc_id;
     pj_status_t status;
-    std::string my_status = "";
+    std::string my_status = "OK";
 
     /* Create pjsua first! */
     status = pjsua_create();
@@ -126,12 +126,12 @@ Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
         pjsua_acc_config cfg;
 
         pjsua_acc_config_default(&cfg);
-        cfg.id = pj_str("sip:VH3@sip-10001.accounts.qos.vocal-dev.com");
-        cfg.reg_uri = pj_str("sip:sip-10001.accounts.qos.vocal-dev.com");
+        cfg.id = pj_str("sip:VH_AC1_2@a10001.ac1.accounts.devvpc.vocal-dev.com");
+        cfg.reg_uri = pj_str("sip:a10001.ac1.accounts.devvpc.vocal-dev.com");
         cfg.cred_count = 1;
-        cfg.cred_info[0].realm = pj_str("sip-10001.accounts.qos.vocal-dev.com");
+        cfg.cred_info[0].realm = pj_str("a10001.ac1.accounts.devvpc.vocal-dev.com");
         cfg.cred_info[0].scheme = pj_str("digest");
-        cfg.cred_info[0].username = pj_str("VH3");
+        cfg.cred_info[0].username = pj_str("VH_AC1_2");
         cfg.cred_info[0].data_type = PJSIP_CRED_DATA_PLAIN_PASSWD;
         cfg.cred_info[0].data = pj_str("123");
 
@@ -144,11 +144,10 @@ Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
         }
     }
 
-//
-//    /* If URL is specified, make call to the URL. */
-//    //pj_str_t uri = pj_str("VH3@sip-10001.accounts.qos.vocal-dev.com");
-//    //status = pjsua_call_make_call(acc_id, &uri, 0, NULL, NULL, NULL);
-//    //if (status != PJ_SUCCESS) error_exit("Error making call", status);
+    /* If URL is specified, make call to the URL. */
+    //pj_str_t uri = pj_str("VH3@sip-10001.accounts.qos.vocal-dev.com");
+    //status = pjsua_call_make_call(acc_id, &uri, 0, NULL, NULL, NULL);
+    //if (status != PJ_SUCCESS) error_exit("Error making call", status);
 //
 //    /* Wait until user press "q" to quit. */
 //    for (;;) {
@@ -166,14 +165,14 @@ Java_com_spectralink_pjdroid_MainActivity_stringFromJNI(
 //        if (option[0] == 'h')
 //            pjsua_call_hangup_all();
 //    }
-
-    /* Destroy pjsua */
-    status = pjsua_destroy();
-    if (status != PJ_SUCCESS) {
-        pjsua_perror("native-lib.cpp", "Error in pjsua_destroy()", status);
-        return env->NewStringUTF(my_status.c_str());
-    }
-    my_status = "pjsua_destroy() successfully";
-
+//
+//    /* Destroy pjsua */
+//    status = pjsua_destroy();
+//    if (status != PJ_SUCCESS) {
+//        pjsua_perror("native-lib.cpp", "Error in pjsua_destroy()", status);
+//        return env->NewStringUTF(my_status.c_str());
+//    }
+//    my_status = "pjsua_destroy() successfully";
+//
     return env->NewStringUTF(my_status.c_str());
 }
