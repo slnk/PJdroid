@@ -17,6 +17,9 @@ set (pjinstalled_libs_dir ${generated_libs_dir}/usr/local/lib)
 set (pjinstalled_incs_dir ${generated_libs_dir}/usr/local/include)
 
 set (TARGET_ABI armeabi-v7a)
+set (NDK_TOOLCHAIN_VERSION 4.9)
+set (ANDROID_NDK_ROOT /home/fhsiao/android-ndk-r15c)
+set (APP_PLATFORM android-26)
 
 # we create pjproject generated directories
 file(MAKE_DIRECTORY ${generated_libs_dir})
@@ -74,8 +77,8 @@ target_include_directories ( pjapi PUBLIC
 
 add_custom_target ( pjproject
                     COMMAND ${CMAKE_COMMAND} -E env
-                    "ANDROID_NDK_ROOT=${ANDROID_NDK}"
-                    "TARGET_ABI=${TARGET_ABI}" ./configure-android --use-ndk-cflags
+                    "ANDROID_NDK_ROOT=${ANDROID_NDK_ROOT}"
+                    "TARGET_ABI=${TARGET_ABI}" "NDK_TOOLCHAIN_VERSION=${NDK_TOOLCHAIN_VERSION}" "APP_PLATFORM=${APP_PLATFORM}" ./configure-android --use-ndk-cflags
                     COMMAND make dep
                     COMMAND make
                     WORKING_DIRECTORY ${pj_dir}
